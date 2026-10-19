@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comunicación docente en acción</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --morado:#6e46b4;--morado-ink:#4b2b85;--morado-deep:#2a1b4a;--lav:#ece6f7;
+  --verde:#adc749;--verde-ink:#4f6118;--mint:#eef4d8;
+  --mostaza:#ecc759;--mostaza-ink:#7a5a05;--cream:#fbf0c9;
+  --azul:#3a7ca5;--azul-ink:#245a7c;--sky:#e1eef6;
+  --ink:#221d33;--muted:#5f596c;--bg:#f4f2f8;--paper:#fff;--line:#e3dfeb;--soft:#f9f8fc;
+  --accent:var(--morado);--accent-ink:var(--morado-ink);--accent-soft:var(--lav);
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+body[data-sec="simular"]{--accent:#d9a520;--accent-ink:var(--mostaza-ink);--accent-soft:var(--cream)}
+body[data-sec="decidir"]{--accent:var(--azul);--accent-ink:var(--azul-ink);--accent-soft:var(--sky)}
+body[data-sec="estrategias"]{--accent:#8fa63a;--accent-ink:var(--verde-ink);--accent-soft:var(--mint)}
+
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+button,textarea,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--display);margin:0;letter-spacing:-.01em}
+p{margin:0}
+
+/* Cabecera */
+.top{position:sticky;top:0;z-index:30;background:rgba(244,242,248,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-row{display:flex;align-items:center;gap:18px;padding:10px 22px;max-width:1240px;margin:auto}
+.brand{display:flex;gap:11px;align-items:center;min-width:0}
+.logo{flex:none;width:40px;height:40px;border-radius:12px 12px 12px 3px;background:var(--morado);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800}
+.brand b{display:block;font-size:15px;line-height:1.2}
+.brand small{display:block;color:var(--muted);font-size:13px}
+.rail{display:flex;gap:4px;margin-left:auto}
+.rail button{display:flex;align-items:center;gap:7px;border:0;background:transparent;padding:7px 11px;border-radius:999px;font-size:14px;color:var(--muted)}
+.rail button i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:#e6e1ee;color:var(--muted)}
+.rail button.done i{background:var(--verde);color:var(--verde-ink)}
+.rail button.on{background:var(--paper);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.rail button.on i{background:var(--accent);color:#fff}
+.sync{flex:none;font-size:12px;color:var(--muted);padding:6px 10px;border-radius:999px;background:var(--paper);border:1px solid var(--line)}
+.progress{height:4px;background:#e6e1ee}
+.progress>div{height:100%;width:0;background:var(--accent);transition:width .3s}
+
+/* Diapositivas */
+main{padding:22px 18px 110px}
+.slide{display:none;max-width:1160px;margin:auto;background:var(--paper);border:1px solid var(--line);border-radius:28px;padding:clamp(26px,5vw,58px);position:relative;overflow:hidden}
+.slide.active{display:block;animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2{font-size:clamp(30px,4.2vw,46px);line-height:1.08;font-weight:800;max-width:26ch}
+h3{font-size:21px;line-height:1.2;font-weight:700;margin-bottom:8px}
+h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.lead{font-size:20px;line-height:1.55;color:var(--muted);max-width:62ch;margin-top:14px}
+.sec-label{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--accent-ink);margin-bottom:12px}
+.sec-label::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.muted{color:var(--muted)}
+.mt{margin-top:26px}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g-split{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+
+/* Portada */
+.slide.cover{background:var(--morado-deep);color:#fff;border:0;min-height:calc(100vh - 210px)}
+.cover-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;position:relative;z-index:1;align-items:end}
+.cover h1{font-size:clamp(46px,7.4vw,96px);line-height:.95;font-weight:800;letter-spacing:-.035em;margin:18px 0 26px;max-width:9ch}
+.cover-tag{display:inline-block;padding:7px 14px;border-radius:14px 14px 14px 3px;background:var(--mostaza);color:var(--morado-deep);font-weight:700;font-size:14px}
+.cover-lead{font-size:20px;line-height:1.55;color:#ddd5ec;max-width:52ch}
+.cover-lead+.cover-lead{margin-top:14px;font-size:17px;color:#bfb3d6}
+.route{list-style:none;margin:0;padding:0;counter-reset:r}
+.route li{counter-increment:r;display:grid;grid-template-columns:40px 1fr auto;gap:2px 12px;padding:13px 0;border-top:1px solid rgba(255,255,255,.14);cursor:pointer}
+.route li:last-child{border-bottom:1px solid rgba(255,255,255,.14)}
+.route li::before{content:counter(r);grid-row:span 2;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);font-weight:700;color:var(--mostaza)}
+.route li:hover::before{background:var(--mostaza);color:var(--morado-deep)}
+.route b{font-family:var(--display);font-size:19px}
+.route span{grid-column:2;color:#bfb3d6;font-size:14px}
+.route em{grid-row:1;grid-column:3;font-style:normal;color:#bfb3d6;font-size:13px}
+.route-note{margin-top:12px;font-size:13px;color:#a99bc4}
+.bubble{position:absolute;border:2px solid rgba(255,255,255,.1);border-radius:50% 50% 50% 8px;pointer-events:none}
+.b1{width:420px;height:300px;right:-140px;top:-150px}
+.b2{width:150px;height:110px;right:300px;top:-40px;border-color:rgba(236,199,89,.28);border-radius:50% 50% 8px 50%}
+.b3{width:70px;height:52px;right:56px;top:40px;background:var(--verde);border:0;opacity:.85}
+
+/* Encabezado de actividad */
+.act{display:grid;grid-template-columns:118px 1fr;gap:28px;align-items:start}
+.act-bubble{width:110px;height:100px;border-radius:26px 26px 26px 6px;background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.act-bubble span{font-size:12px;font-weight:700;opacity:.9}
+.act-bubble b{font-family:var(--display);font-size:54px;line-height:.9;font-weight:800}
+body[data-sec="simular"] .act-bubble{color:var(--morado-deep)}
+.act-intro{font-size:19px;line-height:1.55;color:var(--muted);max-width:66ch;margin-top:12px}
+.act-meta{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr) auto;margin-top:20px;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.act-meta>div{padding:15px 18px;border-right:1px solid var(--line)}
+.act-meta>div:last-child{border-right:0;background:var(--accent-soft);min-width:110px}
+.act-meta h4{color:var(--accent-ink)}
+.act-meta p,.act-meta ol{font-size:15.5px;line-height:1.45;margin:0}
+.act-meta ol{padding-left:18px}
+.act-meta li+li{margin-top:4px}
+.act-time p{font-family:var(--display);font-size:24px;font-weight:700}
+
+/* Bloques */
+.panel{border:1px solid var(--line);border-radius:20px;padding:20px;background:var(--paper)}
+.panel.tint{background:var(--accent-soft);border-color:transparent}
+.panel.soft{background:var(--soft)}
+.key{margin-top:26px;padding:20px 24px;border-radius:6px 22px 22px 22px;background:var(--morado-deep);color:#efeaf8;font-size:19px;line-height:1.5}
+.key b{color:var(--mostaza)}
+.field{margin-top:14px}
+.field label,.field .lbl{display:block;font-weight:700;font-size:15px;margin-bottom:6px}
+.field small{display:block;color:var(--muted);font-size:13px;margin:-3px 0 6px}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#fff;outline:none}
+textarea{min-height:82px;resize:vertical;line-height:1.45}
+textarea:focus,input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.btn{border:0;border-radius:14px;padding:12px 20px;font-weight:700}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+.refs{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.45}
+
+/* Marco */
+.lens{padding:22px 20px;border-radius:20px;background:var(--soft);border-top:6px solid var(--c)}
+.lens .num{font-family:var(--display);font-size:15px;font-weight:700;color:var(--c)}
+.lens h3{margin-top:6px}
+.lens p{color:var(--muted);line-height:1.5}
+.lens .practice{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);color:var(--ink)}
+.why-sim{margin-top:22px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;padding:20px 24px;border-radius:20px;background:var(--cream)}
+.why-sim .icon{width:56px;height:56px;border-radius:16px 16px 16px 4px;background:var(--mostaza);display:grid;place-items:center}
+details.biblio{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+details.biblio summary{cursor:pointer;font-weight:700;color:var(--muted)}
+details.biblio ul{font-size:14px;color:var(--muted);line-height:1.5;padding-left:18px}
+
+/* Ciclo */
+.bands{display:grid;grid-template-columns:1fr 2fr 2fr;gap:10px;margin-top:24px}
+.bands div{font-size:13px;font-weight:700;color:var(--accent-ink);border-bottom:3px solid var(--accent);padding-bottom:6px}
+.cycle{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
+.cstep{text-align:left;border:1px solid var(--line);background:#fff;border-radius:18px;padding:15px}
+.cstep b{display:block;font-family:var(--display);font-size:30px;line-height:1;color:var(--accent)}
+.cstep strong{display:block;margin-top:6px;font-size:17px}
+.cstep span{display:block;font-size:14px;color:var(--muted);margin-top:3px;line-height:1.35}
+.cstep.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.cstep.on b{color:var(--mostaza)}.cstep.on span{color:#cfc8dc}
+.cdetail{margin-top:12px;padding:20px 22px;border-radius:6px 20px 20px 20px;background:var(--accent-soft);min-height:96px}
+.cdetail p{font-size:19px}
+.cdetail small{display:block;margin-top:8px;font-size:15px;color:var(--muted)}
+
+/* Causas */
+.scene{margin-top:24px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;padding:18px 22px;border-radius:20px;border:2px dashed var(--accent)}
+.clock{font-family:var(--display);font-weight:800;font-size:15px;background:var(--accent);color:#fff;padding:10px 14px;border-radius:14px;text-align:center;line-height:1.1}
+.clock b{display:block;font-size:30px}
+.scene p{font-size:19px}
+.causes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+.dim{border-radius:18px;padding:16px;background:var(--dc)}
+.dim h3{font-size:17px}
+.tags{display:flex;flex-wrap:wrap;gap:7px}
+.tag{border:1px solid rgba(34,29,51,.14);background:#fff;border-radius:999px;padding:7px 12px;font-size:14px;line-height:1.25;text-align:left}
+.tag[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tag[aria-pressed="true"]::before{content:"✓ "}
+.tally{border-radius:18px;padding:18px;background:var(--morado-deep);color:#fff;display:flex;flex-direction:column;justify-content:center}
+.tally .big{font-family:var(--display);font-size:52px;font-weight:800;line-height:1}
+.tally p{color:#ddd5ec;font-size:15px;margin-top:6px}
+.effects{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.effect{border-radius:18px;border:1px solid var(--line);overflow:hidden}
+.effect .say{padding:14px 16px;background:var(--soft);font-weight:700;border-bottom:1px solid var(--line)}
+.effect .say small{display:block;font-weight:400;font-size:12px;color:var(--accent-ink);margin-bottom:3px}
+.effect .res{padding:14px 16px;font-size:15px;color:var(--muted)}
+.effect .res b{color:var(--ink)}
+
+/* Microexposición */
+.task-card{border-radius:6px 22px 22px 22px;background:var(--cream);padding:22px 24px;border:2px solid var(--mostaza)}
+.task-card h3{color:var(--mostaza-ink);font-size:16px}
+.task-card p{font-size:20px;line-height:1.5}
+.must{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
+.must div{padding:12px;border-radius:14px;background:var(--soft);font-size:14px;color:var(--muted)}
+.must b{display:block;font-family:var(--display);font-size:17px;color:var(--ink)}
+details.text-box{margin-top:14px;border-radius:16px;background:var(--sky);padding:14px 18px}
+details.text-box summary{cursor:pointer;font-weight:700;color:var(--azul-ink)}
+details.text-box p{margin-top:10px;font-size:17px;line-height:1.55}
+.steps-big{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps-big li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--line);font-size:18px}
+.steps-big li:first-child{border-top:0}
+.steps-big li::before{content:counter(s);width:36px;height:36px;border-radius:12px 12px 12px 3px;background:var(--accent);color:var(--morado-deep);display:grid;place-items:center;font-family:var(--display);font-weight:800}
+
+/* Temporizador */
+.timer{border-radius:22px;background:var(--morado-deep);color:#fff;padding:20px;text-align:center}
+.timer .t-label{font-size:14px;color:#cfc8dc}
+.timer .t-display{font-family:var(--display);font-size:clamp(54px,8vw,84px);font-weight:800;line-height:1;margin:8px 0 14px;font-variant-numeric:tabular-nums}
+.timer.ending .t-display{color:var(--mostaza)}
+.timer.over .t-display{color:#ff9d84}
+.timer .t-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.timer button{border:0;border-radius:12px;padding:9px 16px;font-weight:700;background:rgba(255,255,255,.12);color:#fff}
+.timer button.go{background:var(--mostaza);color:var(--morado-deep)}
+
+/* Pauta del mentor */
+details.mentor{margin-top:22px;border:2px dashed var(--line);border-radius:20px;padding:4px 20px}
+details.mentor[open]{padding-bottom:18px}
+details.mentor>summary{cursor:pointer;padding:14px 0;font-weight:700;font-family:var(--display);font-size:18px}
+.rubric-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:15.5px}
+.rubric-row .dimname{display:block;font-size:12px;font-weight:700;color:var(--muted)}
+.lvl{display:flex;gap:5px}
+.lvl button,.scale button{border:1px solid var(--line);background:#fff;border-radius:10px;font-size:13px;padding:6px 10px;font-weight:700}
+.lvl button.sel,.scale button.sel{background:var(--ink);border-color:var(--ink);color:#fff}
+.incs{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.inc{border:1px solid var(--line);background:#fff;border-radius:14px 14px 14px 3px;padding:8px 12px;font-size:14px;text-align:left}
+.inc[aria-pressed="true"]{background:var(--cream);border-color:#d9a520}
+
+/* Quiz */
+.qdots{display:flex;gap:5px;margin:22px 0 12px;flex-wrap:wrap}
+.qdots i{width:26px;height:6px;border-radius:9px;background:#e6e1ee}
+.qdots i.done{background:var(--accent)}
+.qdots i.cur{background:var(--ink)}
+.qcard{display:none;border:1px solid var(--line);border-radius:24px;padding:24px}
+.qcard.on{display:block}
+.qtop{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--muted)}
+.pill{display:inline-block;padding:4px 11px;border-radius:999px;font-size:13px;font-weight:700}
+.pill.lvl-b{background:var(--cream);color:var(--mostaza-ink)}
+.pill.lvl-m{background:var(--lav);color:var(--morado-ink)}
+.pill.dimp{background:var(--sky);color:var(--azul-ink)}
+.qtop .qn{margin-left:auto}
+.qsit{font-family:var(--display);font-size:clamp(20px,2.3vw,25px);line-height:1.3;font-weight:700;margin:14px 0 6px;max-width:52ch}
+.qask{color:var(--muted);margin-bottom:16px}
+.qopts{display:grid;gap:10px}
+.qopt{display:grid;grid-template-columns:34px 1fr;gap:4px 12px;text-align:left;border:1px solid var(--line);border-radius:16px;padding:13px 15px;background:#fff;line-height:1.4}
+.qopt>i{font-style:normal;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--soft);font-weight:700;grid-row:span 2}
+.qopt:hover{border-color:var(--accent)}
+.qopt .eff{display:none;font-size:14.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin-top:4px}
+.qopt .eff em{font-style:normal;font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px;margin-right:6px}
+.answered .qopt .eff{display:block}
+.answered .qopt{opacity:.78}
+.qopt.sel{opacity:1!important;border:2px solid var(--accent);background:var(--accent-soft)}
+.qopt.sel>i{background:var(--accent);color:#fff}
+.t-estructurar{background:var(--lav);color:var(--morado-ink)}
+.t-dialogar{background:var(--mint);color:var(--verde-ink)}
+.t-agilizar{background:var(--cream);color:var(--mostaza-ink)}
+.qtalk{display:none;margin-top:14px;padding:14px 18px;border-radius:6px 18px 18px 18px;background:var(--morado-deep);color:#efeaf8}
+.answered .qtalk{display:block}
+.qtalk b{color:var(--mostaza)}
+.qactions{display:flex;justify-content:space-between;margin-top:16px}
+.qsum{display:none;border-radius:24px;padding:26px;background:var(--morado-deep);color:#fff}
+.qsum.on{display:block}
+.qsum h3{font-size:26px}
+.qsum p{color:#ddd5ec;max-width:66ch;margin-top:8px}
+.bars{display:grid;gap:12px;margin-top:18px}
+.bar{display:grid;grid-template-columns:130px 1fr 40px;gap:12px;align-items:center}
+.bar .tr{height:14px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar .tr div{height:100%;border-radius:9px}
+.bar small{display:block;color:#bfb3d6;font-size:13px}
+
+/* Estrategias */
+.strats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.strat{border:1px solid var(--line);border-radius:20px;padding:16px;background:#fff;display:flex;flex-direction:column;gap:8px}
+.strat.picked{border:2px solid var(--accent);background:var(--accent-soft)}
+.strat h3{font-size:18px;margin:0}
+.strat p{color:var(--muted);font-size:14.5px;line-height:1.45}
+.strat ul{margin:0;padding-left:18px;font-size:14.5px;line-height:1.45}
+.phrase{font-size:14px;padding:8px 11px;border-radius:12px 12px 12px 3px;background:var(--cream);color:var(--mostaza-ink)}
+.why{font-size:12.5px!important;border-top:1px dashed var(--line);padding-top:8px}
+.pick{margin-top:auto;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px;font-weight:700;font-size:14px}
+.pick[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pick:disabled{opacity:.4;cursor:not-allowed}
+.counter{font-weight:700;color:var(--accent-ink)}
+
+/* Tarea */
+.chosen{padding:16px 18px;border-radius:18px;background:var(--lav)}
+.chosen ul{margin:6px 0 0;padding-left:18px}
+.week{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.week div{padding:14px;border-radius:16px;background:var(--soft)}
+.week b{display:block;font-family:var(--display);font-size:17px;color:var(--morado-ink)}
+.week span{font-size:14.5px;color:var(--muted)}
+.rating{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.scale{display:flex;gap:5px}
+.scale button{width:38px;padding:7px 0}
+
+/* Pie */
+.foot{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+.foot-row{max-width:1196px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px}
+.foot .count{font-size:14px;color:var(--muted);text-align:center}
+.foot .count b{display:block;color:var(--ink);font-size:15px}
+
+/* Ficha */
+#ficha{display:none}
+.fx h1{font-size:28px;margin-bottom:4px}
+.fx h2{font-size:18px;margin:20px 0 6px;max-width:none;color:#4b2b85;border-bottom:2px solid #ece6f7;padding-bottom:4px}
+.fx p,.fx li{font-size:13px;line-height:1.45}
+.fx .row{display:grid;grid-template-columns:210px 1fr;gap:10px;padding:4px 0;font-size:13px}
+.fx .row b{color:#5f596c}
+.fx .empty{color:#9a94a6;font-style:italic}
+@media print{
+  body{background:#fff}
+  .top,.foot,main{display:none!important}
+  #ficha{display:block;padding:10mm}
+}
+@media(max-width:960px){
+  .rail span{display:none}.rail button{padding:5px}.brand small{display:none}
+  .strats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:820px){
+  .top-row{flex-wrap:wrap;gap:10px;padding:10px 14px}
+  .rail{margin-left:0;order:3;width:100%;justify-content:space-between}
+  .rail span{display:inline;font-size:12px}
+  .rail button{flex-direction:column;gap:2px}
+  .sync{margin-left:auto}
+  .g2,.g3,.g-split,.cover-grid,.causes,.cycle,.strats,.effects,.must,.week{grid-template-columns:1fr}
+  .bands{display:none}
+  .act{grid-template-columns:1fr;gap:16px}
+  .act-bubble{width:84px;height:76px}.act-bubble b{font-size:40px}
+  .act-meta{grid-template-columns:1fr}
+  .act-meta>div{border-right:0;border-bottom:1px solid var(--line)}
+  .scene,.why-sim{grid-template-columns:1fr}
+  .rubric-row{grid-template-columns:1fr}
+  .bar{grid-template-columns:90px 1fr 34px}
+  .b1{width:260px;height:200px}.b2,.b3{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body data-sec="inicio">
+
+<header class="top">
+  <div class="top-row">
+    <div class="brand"><span class="logo" aria-hidden="true">CD</span><span><b>Comunicación docente en acción</b><small>Mentoría para ensayar la comunicación oral en el aula</small></span></div>
+    <nav class="rail" aria-label="Etapas de la sesión">
+      <button data-go="comprender"><i>1</i><span>Comprender</span></button>
+      <button data-go="simular"><i>2</i><span>Microclase</span></button>
+      <button data-go="decidir"><i>3</i><span>Decidir</span></button>
+      <button data-go="estrategias"><i>4</i><span>Estrategias</span></button>
+      <button data-go="tarea"><i>5</i><span>Tarea</span></button>
+    </nav>
+    <div class="sync" id="syncStatus" role="status">Conectando…</div>
+  </div>
+  <div class="progress"><div id="pbar"></div></div>
+</header>
+
+<main>
+
+<!-- PORTADA -->
+<section class="slide cover" data-sec="inicio" data-title="Inicio" data-next="Comenzar">
+  <div class="bubble b1"></div><div class="bubble b2"></div><div class="bubble b3"></div>
+  <div class="cover-grid">
+    <div>
+      <span class="cover-tag">Mentoría docente</span>
+      <h1>Comunicación docente en acción</h1>
+      <p class="cover-lead">Hablar frente a un curso implica decidir en tiempo real: qué decir, en qué orden, cuándo detenerse, cómo leer al grupo y qué hacer cuando la interacción toma otro rumbo.</p>
+      <p class="cover-lead">Hoy vas a revisar cómo analizar tu discurso, dar instrucciones a un curso simulado, tomar decisiones en situaciones de aula y llevarte una tarea para tu práctica.</p>
+    </div>
+    <div>
+      <ol class="route">
+        <li data-go="comprender"><b>Comprender</b><em>15 min</em><span>Marco, pasos de análisis, causas y efectos</span></li>
+        <li data-go="simular"><b>Microclase</b><em>10 min</em><span>Microexposición de instrucciones</span></li>
+        <li data-go="decidir"><b>Decidir</b><em>20 min</em><span>Doce situaciones de 7.º básico a 4.º medio</span></li>
+        <li data-go="estrategias"><b>Estrategias</b><em>8 min</em><span>Banco y elección para la semana</span></li>
+        <li data-go="tarea"><b>Tarea</b><em>5 min</em><span>Observación y análisis en tu práctica</span></li>
+      </ol>
+      <p class="route-note">Duración aproximada: 60 minutos. Tus respuestas se guardan automáticamente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MARCO -->
+<section class="slide" data-sec="comprender" data-title="Marco de la sesión">
+  <p class="sec-label">Comprender</p>
+  <h2>Desde dónde miramos la comunicación en el aula</h2>
+  <p class="lead">La sesión se apoya en un enfoque sociocultural: el aprendizaje se construye en la interacción, y el discurso docente es la herramienta principal para mediar esa construcción. Tres líneas de investigación permiten volver observable lo que ocurre cuando enseñamos.</p>
+  <div class="grid g3 mt">
+    <div class="lens" style="--c:var(--morado)">
+      <span class="num">Lente 1</span>
+      <h3>Mirada profesional</h3>
+      <p>Quienes enseñan con experiencia se distinguen por cómo atienden a lo que ocurre en la sala, cómo lo interpretan y cómo deciden una respuesta. Esa mirada se aprende y se entrena.</p>
+      <p class="practice"><b>En la práctica:</b> separar lo que observo de lo que supongo antes de actuar.</p>
+      <p class="refs">Jacobs, Lamb y Philipp (2010); van Es y Sherin (2008)</p>
+    </div>
+    <div class="lens" style="--c:#8fa63a">
+      <span class="num">Lente 2</span>
+      <h3>Carga cognitiva</h3>
+      <p>La memoria de trabajo procesa pocos elementos nuevos a la vez. Una explicación densa o sin jerarquía satura al curso, y también a quien explica mientras decide qué decir.</p>
+      <p class="practice"><b>En la práctica:</b> segmentar, ejemplificar y comprobar antes de agregar información.</p>
+      <p class="refs">Sweller, van Merriënboer y Paas (2019); Rosenshine (2012)</p>
+    </div>
+    <div class="lens" style="--c:var(--azul)">
+      <span class="num">Lente 3</span>
+      <h3>Diálogo y evaluación formativa</h3>
+      <p>Las preguntas, el tiempo de espera y las oportunidades de reformular hacen visible el pensamiento del curso. Esa evidencia permite ajustar la enseñanza en el mismo momento.</p>
+      <p class="practice"><b>En la práctica:</b> preguntar para obtener información, esperar la respuesta y decidir con ella.</p>
+      <p class="refs">Alexander (2020); Wiliam (2011); Rowe (1986)</p>
+    </div>
+  </div>
+  <div class="why-sim">
+    <div class="icon" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2a1b4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></div>
+    <div>
+      <h3>¿Por qué ensayar con una simulación?</h3>
+      <p class="muted">Ensayar una porción acotada de la práctica, recibir retroalimentación y volver a intentarlo permite trabajar habilidades complejas sin la exigencia de una clase completa. En formación docente esto se conoce como <b>aproximaciones a la práctica</b> (Grossman et al., 2009; Lampert et al., 2013).</p>
+    </div>
+  </div>
+  <details class="biblio">
+    <summary>Referencias</summary>
+    <ul>
+      <li>Alexander, R. (2020). <i>A dialogic teaching companion</i>. Routledge.</li>
+      <li>Collins, A., Brown, J. S. y Newman, S. E. (1989). Cognitive apprenticeship. En L. B. Resnick (Ed.), <i>Knowing, learning, and instruction</i> (pp. 453–494). Erlbaum.</li>
+      <li>Grossman, P., Compton, C., Igra, D., Ronfeldt, M., Shahan, E. y Williamson, P. (2009). Teaching practice: A cross-professional perspective. <i>Teachers College Record, 111</i>(9), 2055–2100.</li>
+      <li>Jacobs, V. R., Lamb, L. L. C. y Philipp, R. A. (2010). Professional noticing of children's mathematical thinking. <i>Journal for Research in Mathematics Education, 41</i>(2), 169–202.</li>
+      <li>Lampert, M., Franke, M. L., Kazemi, E., Ghousseini, H., Turrou, A. C., Beasley, H., Cunard, A. y Crowe, K. (2013). Keeping it complex: Using rehearsals to support novice teacher learning of ambitious teaching. <i>Journal of Teacher Education, 64</i>(3), 226–243.</li>
+      <li>Rosenshine, B. (2012). Principles of instruction. <i>American Educator, 36</i>(1), 12–19.</li>
+      <li>Rowe, M. B. (1986). Wait time: Slowing down may be a way of speeding up! <i>Journal of Teacher Education, 37</i>(1), 43–50.</li>
+      <li>Sweller, J., van Merriënboer, J. J. G. y Paas, F. (2019). Cognitive architecture and instructional design: 20 years later. <i>Educational Psychology Review, 31</i>, 261–292.</li>
+      <li>van Es, E. A. y Sherin, M. G. (2008). Mathematics teachers' "learning to notice" in the context of a video club. <i>Teaching and Teacher Education, 24</i>(2), 244–276.</li>
+      <li>Wiliam, D. (2011). <i>Embedded formative assessment</i>. Solution Tree.</li>
+    </ul>
+  </details>
+</section>
+
+<!-- PASOS DE ANÁLISIS -->
+<section class="slide" data-sec="comprender" data-title="Pasos para analizar el discurso">
+  <p class="sec-label">Comprender</p>
+  <h2>Cinco pasos para analizar tu discurso en el aula</h2>
+  <p class="lead">Usa estos pasos cada vez que una interacción no produce el efecto que esperabas. Selecciona cada paso para ver un ejemplo.</p>
+  <div class="bands" aria-hidden="true"><div>Atender</div><div>Interpretar</div><div>Decidir y responder</div></div>
+  <div class="cycle">
+    <button class="cstep on" data-step="0"><b>1</b><strong>Observo</strong><span>¿Qué conducta concreta veo?</span></button>
+    <button class="cstep" data-step="1"><b>2</b><strong>Interpreto</strong><span>¿Qué creo que significa?</span></button>
+    <button class="cstep" data-step="2"><b>3</b><strong>Abro hipótesis</strong><span>¿Qué otras causas son posibles?</span></button>
+    <button class="cstep" data-step="3"><b>4</b><strong>Compruebo</strong><span>¿Qué evidencia puedo recoger?</span></button>
+    <button class="cstep" data-step="4"><b>5</b><strong>Ajusto</strong><span>¿Qué cambio tiene sentido?</span></button>
+  </div>
+  <div class="cdetail" id="cdetail" aria-live="polite"></div>
+  <div class="key"><b>Para recordar:</b> los pasos 1 y 2 suelen ocurrir juntos y en un segundo. Separarlos es lo que permite abrir otras hipótesis antes de reaccionar.</div>
+</section>
+
+<!-- ACTIVIDAD 1 -->
+<section class="slide" data-sec="comprender" data-title="Actividad 1: Causas, interacciones y efectos">
+  <div class="act">
+    <div class="act-bubble"><span>Actividad</span><b>1</b></div>
+    <div>
+      <h2>Causas, interacciones y efectos</h2>
+      <p class="act-intro">Una misma señal del curso puede tener causas distintas, y cada forma de responder produce un efecto diferente.</p>
+      <div class="act-meta">
+        <div><h4>Objetivo</h4><p>Ampliar las hipótesis sobre una señal de desconexión y anticipar el efecto de distintas respuestas.</p></div>
+        <div><h4>Instrucciones</h4><ol><li>Lee la escena.</li><li>Marca todas las causas que podrían estar operando.</li><li>Revisa las tres respuestas posibles y comenta cuál usarías tú.</li></ol></div>
+        <div class="act-time"><h4>Tiempo</h4><p>6 min</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="scene">
+    <div class="clock">Minuto<b>12</b></div>
+    <p>Llevas un rato explicando. Varias personas dejaron de mirar la pizarra y dos conversan en voz baja.</p>
+  </div>
+  <div class="causes" id="causeGrid"></div>
+  <h3 class="mt">La misma escena, tres interacciones, tres efectos</h3>
+  <div class="effects">
+    <div class="effect"><div class="say"><small>Interacción A</small>Sigo explicando con más detalle y más volumen.</div><div class="res"><b>Efecto probable:</b> suma información. Si la causa era la carga o la falta de participación, la desconexión aumenta.</div></div>
+    <div class="effect"><div class="say"><small>Interacción B</small>Pregunto: «¿Cuál es la postura del autor?»</div><div class="res"><b>Efecto probable:</b> obtengo evidencia en segundos sobre qué comprendieron y reactivo la atención.</div></div>
+    <div class="effect"><div class="say"><small>Interacción C</small>Pido que lo comenten en parejas durante un minuto.</div><div class="res"><b>Efecto probable:</b> cambia la forma de interacción. Funciona si llevaban mucho tiempo solo escuchando.</div></div>
+  </div>
+</section>
+
+<!-- ACTIVIDAD 2 -->
+<section class="slide" data-sec="simular" data-title="Actividad 2: Prepara tus instrucciones">
+  <div class="act">
+    <div class="act-bubble"><span>Actividad</span><b>2</b></div>
+    <div>
+      <h2>Prepara tus instrucciones</h2>
+      <p class="act-intro">Vas a dar las instrucciones de una tarea a un 8.º básico. Yo haré de curso.</p>
+      <div class="act-meta">
+        <div><h4>Objetivo</h4><p>Preparar una instrucción oral clara, breve y adecuada al nivel.</p></div>
+        <div><h4>Instrucciones</h4><ol><li>Lee la tarea que debes explicar.</li><li>Revisa qué deben dejar claro tus instrucciones.</li><li>Inicia el temporizador y anota solo palabras clave.</li></ol></div>
+        <div class="act-time"><h4>Tiempo</h4><p>2 min</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid g-split mt">
+    <div>
+      <div class="task-card">
+        <h3>La tarea que debes explicar al curso</h3>
+        <p>En parejas, lean el fragmento sobre el uso de celulares. Identifiquen la postura del autor y una razón que la sostiene. Subrayen la frase del texto que les sirve como evidencia. Tienen 10 minutos. Al final, una pareja compartirá su respuesta.</p>
+      </div>
+      <details class="text-box"><summary>Ver el fragmento que usará el curso</summary>
+        <p>«Prohibir completamente los celulares durante la jornada escolar no resuelve por sí solo los problemas de distracción. En muchas actividades pueden utilizarse como herramientas de búsqueda, registro o producción. Por eso, más que eliminarlos, las escuelas deberían enseñar a utilizarlos de manera responsable y establecer momentos claros para su uso.»</p>
+      </details>
+      <h3 class="mt">Tus instrucciones deben dejar claro</h3>
+      <div class="must">
+        <div><b>Para qué</b>propósito de la tarea</div>
+        <div><b>Qué hacer</b>pasos en orden</div>
+        <div><b>Con quién</b>forma de trabajo</div>
+        <div><b>Qué mostrar</b>producto esperado</div>
+        <div><b>Cuánto</b>tiempo disponible</div>
+      </div>
+    </div>
+    <div>
+      <div class="timer" data-seconds="120" data-label="Preparación"></div>
+      <div class="field"><label for="p1">Tus palabras clave</label><textarea id="p1" data-key="plan_notas" style="min-height:150px"></textarea></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVIDAD 3 -->
+<section class="slide" data-sec="simular" data-title="Actividad 3: Da tus instrucciones">
+  <div class="act">
+    <div class="act-bubble"><span>Actividad</span><b>3</b></div>
+    <div>
+      <h2>Da tus instrucciones al curso</h2>
+      <p class="act-intro">Ahora habla como lo harías frente a tu curso de práctica.</p>
+      <div class="act-meta">
+        <div><h4>Objetivo</h4><p>Comunicar oralmente una instrucción completa y responder las dudas del curso.</p></div>
+        <div><h4>Instrucciones</h4><ol><li>Ponte de pie.</li><li>Inicia el temporizador cuando estés lista.</li><li>Da tus instrucciones en 3 minutos como máximo.</li><li>Responde las preguntas que haga el curso.</li></ol></div>
+        <div class="act-time"><h4>Tiempo</h4><p>3 min</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid g2 mt">
+    <div>
+      <div class="timer" data-seconds="180" data-label="Microexposición"></div>
+    </div>
+    <div>
+      <ol class="steps-big">
+        <li>Al terminar, escribe en una frase qué parte de tus instrucciones crees que fue más clara.</li>
+        <li>Escribe también en qué momento dudaste de cómo seguir.</li>
+      </ol>
+      <div class="field"><label for="m1">Lo más claro fue…</label><textarea id="m1" data-key="micro_claro"></textarea></div>
+      <div class="field"><label for="m2">Dudé cuando…</label><textarea id="m2" data-key="micro_duda"></textarea></div>
+    </div>
+  </div>
+  <details class="mentor">
+    <summary>Pauta de observación del mentor</summary>
+    <p class="muted" style="font-size:14px">Situaciones para introducir como curso (marca las que usaste):</p>
+    <div class="incs" id="incidents"></div>
+    <div id="rubric" style="margin-top:14px"></div>
+    <div class="grid g2">
+      <div class="field"><label for="m3">Lo que funcionó</label><textarea id="m3" data-key="mentor_bien"></textarea></div>
+      <div class="field"><label for="m4">Un ajuste para practicar</label><textarea id="m4" data-key="mentor_ajuste"></textarea></div>
+    </div>
+  </details>
+</section>
+
+<!-- ACTIVIDAD 4 -->
+<section class="slide" data-sec="decidir" data-title="Actividad 4: Decisiones en el aula">
+  <div class="act">
+    <div class="act-bubble"><span>Actividad</span><b>4</b></div>
+    <div>
+      <h2>¿Qué harías tú?</h2>
+      <p class="act-intro">Doce situaciones de 7.º básico a 4.º medio. En cada una hay varias respuestas posibles y cada una produce un efecto comunicativo distinto.</p>
+      <div class="act-meta">
+        <div><h4>Objetivo</h4><p>Reconocer desde tu experiencia cómo decides comunicar y qué efectos produce cada decisión.</p></div>
+        <div><h4>Instrucciones</h4><ol><li>Elige la opción que usarías en tu práctica, aunque otra también te parezca válida.</li><li>Lee los efectos de todas las opciones.</li><li>Responde en voz alta la pregunta para conversar.</li></ol></div>
+        <div class="act-time"><h4>Tiempo</h4><p>20 min</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="qdots" id="qdots" aria-hidden="true"></div>
+  <div id="quiz"></div>
+</section>
+
+<!-- ACTIVIDAD 5 -->
+<section class="slide" data-sec="estrategias" data-title="Actividad 5: Banco de estrategias">
+  <div class="act">
+    <div class="act-bubble"><span>Actividad</span><b>5</b></div>
+    <div>
+      <h2>Elige dos estrategias para tu semana</h2>
+      <div class="act-meta">
+        <div><h4>Objetivo</h4><p>Seleccionar dos estrategias para ensayar en tu práctica.</p></div>
+        <div><h4>Instrucciones</h4><ol><li>Revisa las ocho estrategias.</li><li>Considera lo que ocurrió en tu microexposición y tu perfil de decisiones.</li><li>Marca dos para practicar esta semana.</li></ol></div>
+        <div class="act-time"><h4>Tiempo</h4><p>8 min</p></div>
+      </div>
+    </div>
+  </div>
+  <p class="mt"><span class="counter" id="estCount">0 de 2 elegidas</span></p>
+  <div class="strats" id="strats"></div>
+</section>
+
+<!-- ACTIVIDAD 6 -->
+<section class="slide" data-sec="tarea" data-title="Actividad 6: Tarea de la semana">
+  <div class="act">
+    <div class="act-bubble"><span>Actividad</span><b>6</b></div>
+    <div>
+      <h2>Observa y analiza tu práctica</h2>
+      <p class="act-intro">Esta tarea la realizas durante la semana en tu centro de práctica. La revisaremos en la próxima mentoría.</p>
+      <div class="act-meta">
+        <div><h4>Objetivo</h4><p>Aplicar en una clase real los pasos de análisis y las estrategias que elegiste.</p></div>
+        <div><h4>Instrucciones</h4><ol>
+          <li>Elige una clase de esta semana.</li>
+          <li>Antes de la clase, marca en tu planificación dónde usarás tus dos estrategias.</li>
+          <li>Durante la clase, fíjate en un momento en que el curso se desconecte o no comprenda una instrucción.</li>
+          <li>Después de la clase, analiza ese momento con los cinco pasos en el registro de la siguiente pantalla.</li>
+          <li>Si tu centro de práctica lo permite, graba solo tu voz mientras das instrucciones y escúchala una vez.</li>
+          <li>Trae el registro completo a la próxima mentoría.</li>
+        </ol></div>
+        <div class="act-time"><h4>Plazo</h4><p>1 semana</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid g2 mt">
+    <div class="chosen" id="chosen"></div>
+    <div>
+      <div class="week">
+        <div><b>Antes</b><span>Planifica dónde usarás las estrategias.</span></div>
+        <div><b>Durante</b><span>Observa un momento crítico.</span></div>
+        <div><b>Después</b><span>Analízalo con los cinco pasos.</span></div>
+      </div>
+      <div class="field"><label for="t0">Clase en que lo aplicarás (curso y fecha)</label><input type="text" id="t0" data-key="tarea_clase"></div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRO -->
+<section class="slide" data-sec="tarea" data-title="Registro de la tarea">
+  <p class="sec-label">Tarea</p>
+  <h2>Registro de la semana</h2>
+  <p class="lead">Completa este registro después de tu clase. Cada cambio se guarda automáticamente en este dispositivo y en la nube, para que puedas cerrar la página y volver durante la semana.</p><div class="panel tint mt"><h3 style="font-size:18px">Guardado automático</h3><p class="muted">No necesitas enviar el formulario ni presionar “guardar”. Cuando veas <b>Guardado en la nube</b> en la parte superior, tus respuestas ya quedaron sincronizadas.</p></div>
+  <div class="grid g2 mt">
+    <div>
+      <div class="field"><label for="r1">1 · Observé</label><small>Solo conductas, sin interpretar.</small><textarea id="r1" data-key="reg_obs"></textarea></div>
+      <div class="field"><label for="r2">2 · Interpreté</label><small>Lo que pensé en ese momento.</small><textarea id="r2" data-key="reg_int"></textarea></div>
+      <div class="field"><label for="r3">3 · Otras hipótesis posibles</label><textarea id="r3" data-key="reg_hip"></textarea></div>
+      <div class="field"><label for="r4">4 · Cómo lo comprobé</label><textarea id="r4" data-key="reg_comp"></textarea></div>
+      <div class="field"><label for="r5">5 · Qué ajusté y qué efecto tuvo</label><textarea id="r5" data-key="reg_ajuste"></textarea></div>
+    </div>
+    <div>
+      <div class="field"><label for="r6">Cómo usé mis estrategias y qué pasó</label><textarea id="r6" data-key="reg_estrategias"></textarea></div>
+      <div class="panel tint field">
+        <h3 style="font-size:18px">¿Cómo sostuviste cada dimensión en esa clase?</h3>
+        <p class="muted" style="font-size:14px">1 = me costó mucho · 4 = la sostuve con facilidad</p>
+        <div id="ratings" style="margin-top:6px"></div>
+      </div>
+      <div class="field"><label for="r7">Lo que quiero conversar en la próxima mentoría</label><textarea id="r7" data-key="reg_conversar"></textarea></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <button class="btn primary" id="printBtn">Descargar mi ficha (PDF)</button>
+        <button class="btn ghost" id="resetBtn">Comenzar una sesión nueva</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-row">
+    <button class="btn ghost" id="prevBtn">Atrás</button>
+    <div class="count"><b id="slideTitle">Inicio</b><span id="slideNum">1 de 10</span></div>
+    <button class="btn primary" id="nextBtn">Siguiente</button>
+  </div>
+</footer>
+
+<div id="ficha" class="fx"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ================= Datos ================= */
+var CAUSES=[
+  {id:'comunico',name:'Cómo comunico',bg:'#e1eef6',items:['demasiada información seguida','ritmo muy rápido','ritmo demasiado lento','pocas pausas','ideas poco jerarquizadas']},
+  {id:'tarea',name:'Cómo está diseñada la actividad',bg:'#eef4d8',items:['consigna poco clara','tarea muy fácil o muy difícil','propósito poco visible','tiempo excesivo']},
+  {id:'contenido',name:'Contenido',bg:'#fbf0c9',items:['alta densidad conceptual','pocos ejemplos','poca conexión con saberes previos','texto complejo']},
+  {id:'grupo',name:'Dinámica del grupo',bg:'#f6e6ee',items:['cansancio','momento de la jornada','conversaciones paralelas','clima del curso']},
+  {id:'interaccion',name:'Forma de interacción',bg:'#ece6f7',items:['mucho tiempo escuchando','pocas oportunidades de responder','preguntas muy amplias','turnos poco claros']}
+];
+var CYCLE=[
+  ['Varias personas dejaron de mirar la pizarra y dos conversan en voz baja.','Describe conductas. Palabras como «aburridos» o «desinteresados» ya son interpretaciones.'],
+  ['«Están aburridos porque voy demasiado rápido.»','La primera interpretación suele aparecer de forma automática. Nombrarla permite ponerla a prueba.'],
+  ['Ya entendieron. Necesitan participar. La explicación es extensa. No comprendieron. Están cansados.','Cada hipótesis llevaría a una respuesta distinta.'],
+  ['Hago una pregunta breve («¿cuál es la postura del autor?») o pido que reformulen la idea con sus palabras.','Una pregunta bien elegida entrega evidencia en pocos segundos.'],
+  ['Con esa evidencia decido: pausar, ejemplificar, avanzar o cambiar la forma de participación.','Después del ajuste vuelvo a observar, y el ciclo comienza otra vez.']
+];
+var INCIDENTS=['«¿Es en parejas o individual?»','«¿Hay que escribirlo?»','«No entendí qué es la postura.»','Dos estudiantes conversan mientras explica.','«¿Cuánto tiempo tenemos?» (después de que lo dijo)','«¿Y para qué sirve esto?»'];
+var RUBRIC=[
+  ['Propósito','Anuncia para qué sirve la tarea.'],
+  ['Organización','Presenta los pasos en orden y de a uno.'],
+  ['Completitud','Indica forma de trabajo, producto y tiempo.'],
+  ['Adecuación','Usa léxico y ejemplos adecuados a 8.º básico.'],
+  ['Voz','Ritmo, pausas, volumen y énfasis permiten seguir la secuencia.'],
+  ['No verbal','Mirada, gestos y ubicación acompañan el discurso.'],
+  ['Comprobación','Verifica la comprensión antes de que comiencen.'],
+  ['Interacción','Responde las preguntas sin perder el hilo de la instrucción.']
+];
+var LEVELS=[[3,'Logrado'],[2,'En desarrollo'],[1,'No observado']];
+var DIMS=[['r_org','Organización de las ideas'],['r_voz','Voz, ritmo y pausas'],['r_consigna','Claridad de las instrucciones'],['r_comprob','Comprobación de la comprensión'],['r_dudas','Respuesta ante dudas e imprevistos']];
+var STRATS=[
+  {id:'pausa',t:'Pausa con propósito',d:'Detenerte dos o tres segundos para reorganizar la idea.',l:['Deja un breve silencio.','Recupera la idea central.','Decide qué puede esperar.'],f:'«Volvamos a la idea central.»',w:'Evita planificar y hablar a la vez, lo que libera memoria de trabajo (Sweller et al., 2019).'},
+  {id:'bloque',t:'Una idea por bloque',d:'Segmentar cuando empiezas a acumular información.',l:['Idea principal.','Pausa.','Ejemplo.','Comprobación.'],f:'«Primero necesitamos distinguir esto.»',w:'Presentar material nuevo en pasos breves mejora la comprensión (Rosenshine, 2012).'},
+  {id:'consigna',t:'Consigna en cinco partes',d:'Dar instrucciones con una estructura estable.',l:['Para qué.','Qué hacer, paso a paso.','Con quién.','Qué mostrar.','En cuánto tiempo.'],f:'«Les voy a pedir tres cosas. Primero…»',w:'Una estructura predecible reduce la carga de procesar la instrucción (Rosenshine, 2012).'},
+  {id:'vozalta',t:'Pensar en voz alta',d:'Hacer audible el razonamiento con que llegas a una respuesta.',l:['Lee la oración.','Nombra la pista que usas.','Explica tu decisión.'],f:'«Me fijo en el “por eso”: lo que sigue es lo que propone el autor.»',w:'El curso accede al proceso experto además del resultado (Collins, Brown y Newman, 1989).'},
+  {id:'reformular',t:'Reformular sin repetir',d:'Cambiar la representación cuando una explicación no funcionó.',l:['Cambia la estructura.','Reduce la información.','Usa un ejemplo o contraejemplo.'],f:'«Lo voy a explicar de otra manera.»',w:'Una segunda representación abre otra vía de acceso al concepto (Sweller et al., 2019).'},
+  {id:'comprobar',t:'Comprobar antes de seguir',d:'Recoger evidencia breve de lo que el curso comprendió.',l:['«¿Qué van a hacer primero?»','«Explíquenlo con sus palabras.»','Respuesta de todos con los dedos (1, 2, 3).'],f:'«Antes de empezar: ¿qué deben entregar?»',w:'La evidencia de comprensión orienta la siguiente decisión (Wiliam, 2011).'},
+  {id:'espera',t:'Tiempo de espera',d:'Esperar tres segundos o más después de preguntar.',l:['Pregunta y cuenta mentalmente.','Si nadie responde, reformula la pregunta.','Evita responderla tú.'],f:'«Piénsenlo un momento antes de responder.»',w:'Con más espera, las respuestas son más extensas y elaboradas (Rowe, 1986).'},
+  {id:'voz',t:'Voz al servicio de la estructura',d:'Usar ritmo, volumen y énfasis para marcar lo importante.',l:['Baja el ritmo en lo nuevo.','Enfatiza las palabras clave.','Marca con la voz el cambio de paso.'],f:'«Esto es lo más importante: …» (con pausa antes)',w:'La prosodia ayuda a jerarquizar la información oral y a sostener la atención.'}
+];
+var EST_MAX=2;
+var TEND={
+  estructurar:{n:'Estructurar',c:'#b9a3e3',d:'priorizas claridad, orden y conducción del discurso.'},
+  dialogar:{n:'Dialogar',c:'#adc749',d:'priorizas la participación y la construcción conjunta.'},
+  agilizar:{n:'Agilizar',c:'#ecc759',d:'priorizas el ritmo, el tiempo y el avance de la clase.'}
+};
+/* Cada opción: [texto, tendencia, efecto probable] */
+var QUIZ=[
+ {lvl:'7.º básico',b:1,dim:'Encuadre de la clase',sit:'Vuelven del recreo y el curso está inquieto. Necesitas presentar el objetivo de la clase.',opts:[
+  ['Abres con una pregunta cercana («¿alguna vez quisieron convencer a sus papás de algo?») y desde las respuestas presentas el objetivo.','dialogar','Capta la atención y conecta con su experiencia. Si la conversación se alarga y no explicitas el objetivo al final, queda difuso.'],
+  ['Esperas silencio, escribes el objetivo en la pizarra y lo lees en voz alta, pausadamente.','estructurar','Establece un marco claro y visible. Leído tal cual, el objetivo suele resultar abstracto para estudiantes de 12 o 13 años.'],
+  ['Comienzas directamente con la actividad y explicas el propósito a medida que avanzan.','agilizar','Aprovecha la energía del grupo con acción inmediata. Sin propósito visible, parte del curso ejecuta sin saber para qué.']],
+  talk:'¿Qué haces habitualmente cuando un curso llega inquieto? ¿De dónde viene esa decisión?'},
+ {lvl:'7.º básico',b:1,dim:'Adecuación del léxico',sit:'Tienes que introducir el concepto de «argumento» por primera vez.',opts:[
+  ['Das una definición breve y la dejas escrita: «argumento: razón que apoya una opinión».','estructurar','Aporta precisión y un registro visible al que volver. La definición sola puede quedar abstracta si no se ancla en un ejemplo.'],
+  ['Usas el término en la tarea y lo aclaras cuando alguien pregunta.','agilizar','Permite avanzar. Quienes no preguntan quedan sin el concepto, y en 7.º básico preguntar en público suele costar.'],
+  ['Pides a alguien que intente convencerte de algo y nombras «argumento» a partir de lo que dijo.','dialogar','El concepto queda anclado en un ejemplo propio del curso. Depende de que surja un buen ejemplo y requiere formalizar después.']],
+  talk:'¿Cómo decides cuánto simplificar un término sin perder precisión?'},
+ {lvl:'8.º básico',b:1,dim:'Instrucciones',sit:'Debes dar una tarea de tres pasos que realizarán en grupos.',opts:[
+  ['Muestras un producto terminado de ejemplo y preguntas qué pasos creen que se necesitan.','dialogar','El curso comprende el sentido de la tarea. Sin consolidar al final, pueden quedar versiones distintas de los pasos.'],
+  ['Das la instrucción completa una vez y luego circulas resolviendo dudas por grupo.','agilizar','Inicio rápido y atención personalizada. Repites la misma explicación varias veces y algunos grupos parten tarde.'],
+  ['Dices los tres pasos numerados, los dejas escritos y pides a un estudiante que los repita.','estructurar','Alta claridad con comprobación incluida. Toma más tiempo antes de que el curso comience.']],
+  talk:'Según tu experiencia, ¿en qué momento aparecen la mayoría de las dudas sobre una consigna?'},
+ {lvl:'8.º básico',b:1,dim:'Gestión de la atención',sit:'Mientras explicas, la mitad del curso conversa.',opts:[
+  ['Te detienes, guardas silencio hasta recuperar la atención y retomas con una frase que resume lo dicho.','estructurar','El silencio regula sin confrontar y la síntesis reconecta. Usado con mucha frecuencia, pierde efecto.'],
+  ['Subes el volumen y continúas para no perder el hilo.','agilizar','Mantiene la continuidad de la explicación. Compites con el ruido y el volumen general del curso tiende a subir.'],
+  ['Diriges una pregunta sobre el contenido a uno de los grupos que conversaba.','dialogar','Reincorpora a través de la participación. Según el clima, puede leerse como exposición o llamado de atención.']],
+  talk:'¿Qué señal usas tú para recuperar la atención? ¿Cómo la aprendiste?'},
+ {lvl:'1.º medio',b:0,dim:'Voz y ritmo',sit:'Explicas un contenido nuevo y denso: tres tipos de argumentos.',opts:[
+  ['Presentas los tres tipos de corrido con una tabla proyectada y luego los ejercitan.','agilizar','Entrega una visión global rápida. Es mucha información de una vez y la tabla compite con tu voz por la atención.'],
+  ['Bajas el ritmo, haces una pausa entre cada tipo y enfatizas con la voz las palabras clave.','estructurar','Favorece el procesamiento y jerarquiza lo importante. Un ritmo lento sostenido puede bajar la energía del grupo.'],
+  ['Presentas un tipo, das un ejemplo y pides que el curso proponga otro antes de pasar al siguiente.','dialogar','Comprueba la comprensión en cada bloque. Toma más tiempo y su avance depende de las respuestas.']],
+  talk:'¿Cómo te das cuenta de que estás hablando demasiado rápido?'},
+ {lvl:'1.º medio',b:0,dim:'Preguntas y turnos',sit:'Haces una pregunta al curso y levantan la mano las mismas tres personas de siempre.',opts:[
+  ['Pides que lo conversen en parejas un minuto antes de abrir la pregunta al curso.','dialogar','Aparecen más voces y respuestas más elaboradas. Requiere gestionar bien el regreso al plenario.'],
+  ['Tomas una de las respuestas voluntarias y avanzas, porque es correcta.','agilizar','Es eficiente. La evidencia de comprensión corresponde solo a tres personas.'],
+  ['Anuncias que darás diez segundos para pensar y luego eliges tú a quién preguntar.','estructurar','Amplía quiénes piensan la respuesta. Sin un clima de confianza, algunos pueden sentirse expuestos.']],
+  talk:'¿Qué piensas de preguntar a quien no levanta la mano? ¿Qué experiencias tienes con eso?'},
+ {lvl:'2.º medio',b:0,dim:'Respuesta ante el error',sit:'Un estudiante da, con mucha seguridad y frente al curso, una interpretación incorrecta del texto.',opts:[
+  ['Reconoces lo rescatable de su respuesta y precisas lo incorrecto explicando por qué.','estructurar','Corrige con claridad y cuida al estudiante. El razonamiento queda centrado en ti.'],
+  ['Le preguntas «¿en qué parte del texto te basas?» y abres la pregunta al resto.','dialogar','El curso revisa la evidencia en conjunto. Si el tono no es cuidadoso, el estudiante puede sentirse cuestionado.'],
+  ['Dices «casi» y das la respuesta correcta para seguir.','agilizar','Mantiene el ritmo. El error no se analiza, y otros que pensaban lo mismo no lo revisan.']],
+  talk:'¿Cómo te corregían a ti en el colegio? ¿Se parece a lo que haces ahora?'},
+ {lvl:'2.º medio',b:0,dim:'Retroalimentación oral',sit:'Proyectas el párrafo de un estudiante, con su permiso, para comentarlo en voz alta.',opts:[
+  ['Corriges directamente sobre el texto mientras comentas cada cambio.','agilizar','Muestras la edición en vivo. Muchas correcciones a la vez son difíciles de seguir y de recordar.'],
+  ['Preguntas al curso qué funciona en el párrafo y qué cambiarían, y tú ordenas los aportes.','dialogar','Todo el curso aprende del texto. Exige moderar para que el autor no se sienta expuesto.'],
+  ['Señalas un acierto concreto y una sola mejora, con un ejemplo de cómo quedaría.','estructurar','Entrega una retroalimentación acotada y accionable. El resto del curso puede quedar en un rol pasivo.']],
+  talk:'¿Qué hace que un comentario oral sea útil para quien escribe?'},
+ {lvl:'3.º medio',b:0,dim:'Registro y cercanía',sit:'El curso tiene buen clima y te trata con mucha confianza. Van a debatir un tema polémico.',opts:[
+  ['Mantienes un tono cercano y vas reformulando en registro formal lo que dicen.','dialogar','Conserva la confianza y modela el registro académico sin cortar la participación. Requiere atención constante.'],
+  ['Fijas reglas de turno y pides lenguaje formal antes de empezar.','estructurar','Ordena el intercambio y explicita el registro esperado. Puede enfriar la participación espontánea.'],
+  ['Dejas que conversen libremente y cierras tú con una síntesis.','agilizar','Genera alta participación. El registro y la calidad de los argumentos quedan sin trabajar durante el debate.']],
+  talk:'¿Cómo ajustas tu propio registro cuando pasas de un curso de básica a uno de media?'},
+ {lvl:'3.º medio',b:0,dim:'Lenguaje no verbal y espacio',sit:'Explicas una actividad mientras el curso ya tiene la guía sobre la mesa.',opts:[
+  ['Explicas mientras leen la guía, señalando cada parte.','agilizar','Lectura y explicación avanzan juntas. Compiten dos canales verbales y parte de lo dicho se pierde.'],
+  ['Te ubicas al centro, al frente, y pides que dejen la guía boca abajo hasta terminar.','estructurar','Concentra la atención en tu voz y tu rostro. Algunos sienten que se retrasa el inicio.'],
+  ['Te desplazas entre las mesas mientras explicas, mirando a distintos grupos.','dialogar','Genera cercanía y sostiene la atención en todo el espacio. Tu voz llega de forma desigual y no siempre ven tu cara.']],
+  talk:'¿Dónde te ubicas habitualmente al explicar? ¿Qué efecto crees que tiene?'},
+ {lvl:'4.º medio',b:0,dim:'Diseño del discurso según el curso',sit:'Curso de 4.º medio enfocado en la PAES, con poco interés en el texto que leerán hoy.',opts:[
+  ['Les preguntas qué opinan del texto antes de cualquier análisis y construyes desde ahí.','dialogar','Reconoce su madurez y su voz. Exige tolerar silencios iniciales en un curso poco dispuesto.'],
+  ['Explicitas para qué les sirve la habilidad en la prueba y en la universidad, y luego modelas el análisis.','estructurar','Da sentido y dirección a la clase. Puede reducir la lectura a su utilidad para el rendimiento.'],
+  ['Vas directo a preguntas tipo prueba sobre el texto.','agilizar','El curso percibe la clase como pertinente. La conversación se limita a respuestas cerradas.']],
+  talk:'¿Qué cambia en tu forma de hablar con estudiantes de 17 o 18 años?'},
+ {lvl:'4.º medio',b:0,dim:'Cierre y síntesis',sit:'Quedan tres minutos y todavía no cierras la clase.',opts:[
+  ['Anuncias que cerrarán al inicio de la próxima clase y das la tarea.','agilizar','Respeta el tiempo disponible. La clase queda sin cierre y baja la retención de lo trabajado.'],
+  ['Haces tú una síntesis breve de las tres ideas centrales.','estructurar','Asegura un cierre claro. El curso no verbaliza lo que aprendió.'],
+  ['Pides que cada estudiante escriba en una frase lo que se lleva y escuchas dos.','dialogar','Obtienes evidencia de aprendizaje. Con tres minutos, puede quedar incompleto.']],
+  talk:'Cuando el tiempo no alcanza, ¿qué priorizas y por qué?'}
+];
+
+/* ================= Estado ================= */
+var LS_KEY='cd-mentoria-v4-semana';
+function blank(){return {slide:0,fields:{},toggles:{},ratings:{},quiz:{},qpos:0,updatedAt:0};}
+function normalize(s){var b=blank();if(!s)return b;for(var k in b){if(s[k]!==undefined&&s[k]!==null)b[k]=s[k];}return b;}
+var state=blank();
+try{var raw=localStorage.getItem(LS_KEY);if(raw)state=normalize(JSON.parse(raw));}catch(e){}
+
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ================= Construcción ================= */
+$('#causeGrid').innerHTML=CAUSES.map(function(d){
+  return '<div class="dim" style="--dc:'+d.bg+'"><h3>'+d.name+'</h3><div class="tags">'+
+    d.items.map(function(t,i){return '<button class="tag" data-toggle="causa_'+d.id+'_'+i+'" aria-pressed="false">'+t+'</button>'}).join('')+'</div></div>';
+}).join('')+'<div class="tally" id="tally"></div>';
+
+$('#incidents').innerHTML=INCIDENTS.map(function(t,i){return '<button class="inc" data-toggle="inc_'+i+'" aria-pressed="false">'+t+'</button>'}).join('');
+
+$('#rubric').innerHTML=RUBRIC.map(function(r,i){
+  return '<div class="rubric-row"><span><span class="dimname">'+r[0]+'</span>'+r[1]+'</span><div class="lvl">'+
+    LEVELS.map(function(l){return '<button data-rate="m_'+i+'" data-val="'+l[0]+'">'+l[1]+'</button>'}).join('')+'</div></div>';
+}).join('');
+
+$('#ratings').innerHTML=DIMS.map(function(d){
+  var b='';for(var v=1;v<=4;v++)b+='<button data-rate="'+d[0]+'" data-val="'+v+'" aria-label="'+d[1]+': '+v+'">'+v+'</button>';
+  return '<div class="rating"><span>'+d[1]+'</span><div class="scale">'+b+'</div></div>';
+}).join('');
+
+$('#strats').innerHTML=STRATS.map(function(s){
+  return '<article class="strat" data-strat="'+s.id+'"><h3>'+s.t+'</h3><p>'+s.d+'</p><ul>'+s.l.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'+
+    '<span class="phrase">'+s.f+'</span><p class="why">'+s.w+'</p>'+
+    '<button class="pick" data-toggle="est_'+s.id+'" data-group="est" aria-pressed="false">Practicar esta semana</button></article>';
+}).join('');
+
+(function(){
+  var L=['A','B','C'];
+  $('#quiz').innerHTML=QUIZ.map(function(q,qi){
+    var o=q.opts.map(function(op,oi){
+      return '<button class="qopt" data-q="'+qi+'" data-o="'+oi+'"><i>'+L[oi]+'</i><span>'+op[0]+'</span>'+
+        '<span class="eff"><em class="t-'+op[1]+'">'+TEND[op[1]].n+'</em>'+op[2]+'</span></button>';
+    }).join('');
+    return '<div class="qcard" data-qcard="'+qi+'"><div class="qtop"><span class="pill '+(q.b?'lvl-b':'lvl-m')+'">'+q.lvl+'</span><span class="pill dimp">'+q.dim+'</span><span class="qn">Situación '+(qi+1)+' de '+QUIZ.length+'</span></div>'+
+      '<p class="qsit">'+q.sit+'</p><p class="qask">¿Qué harías tú?</p><div class="qopts">'+o+'</div>'+
+      '<div class="qtalk"><b>Para conversar:</b> '+q.talk+'</div>'+
+      '<div class="qactions"><button class="btn ghost qprev"'+(qi===0?' disabled':'')+'>Situación anterior</button><button class="btn primary qnext" disabled>'+(qi===QUIZ.length-1?'Ver mi perfil':'Siguiente situación')+'</button></div></div>';
+  }).join('')+'<div class="qsum" id="qsum"></div>';
+  $('#qdots').innerHTML=QUIZ.map(function(){return '<i></i>'}).join('');
+})();
+
+/* ================= Temporizadores ================= */
+function fmt(s){var neg=s<0;s=Math.abs(s);return (neg?'+':'')+Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
+$$('.timer').forEach(function(el){
+  var total=+el.dataset.seconds,left=total,iv=null;
+  el.innerHTML='<div class="t-label">'+el.dataset.label+'</div><div class="t-display">'+fmt(left)+'</div><div class="t-btns"><button class="go">Iniciar</button><button class="rs">Reiniciar</button></div>';
+  var disp=$('.t-display',el),go=$('.go',el);
+  function paint(){disp.textContent=fmt(left);el.classList.toggle('ending',left<=30&&left>0);el.classList.toggle('over',left<=0);}
+  function stop(){clearInterval(iv);iv=null;go.textContent=left===total?'Iniciar':'Continuar';}
+  go.addEventListener('click',function(){if(iv){stop();return;}go.textContent='Pausar';iv=setInterval(function(){left--;paint();},1000);});
+  $('.rs',el).addEventListener('click',function(){stop();left=total;go.textContent='Iniciar';paint();});
+});
+
+/* ================= Navegación ================= */
+var slides=$$('.slide');
+var SECS=['comprender','simular','decidir','estrategias','tarea'];
+var idx=0;
+function go(i,noSave){
+  idx=Math.max(0,Math.min(i,slides.length-1));
+  slides.forEach(function(s,k){s.classList.toggle('active',k===idx)});
+  var s=slides[idx],sec=s.dataset.sec;
+  document.body.dataset.sec=sec;
+  $('#pbar').style.width=(idx/(slides.length-1)*100)+'%';
+  $('#slideTitle').textContent=s.dataset.title;
+  $('#slideNum').textContent=(idx+1)+' de '+slides.length;
+  $('#prevBtn').disabled=idx===0;
+  var nb=$('#nextBtn');
+  nb.style.visibility=idx===slides.length-1?'hidden':'visible';
+  nb.textContent=s.dataset.next||'Siguiente';
+  var si=SECS.indexOf(sec);
+  $$('.rail button').forEach(function(b,k){b.classList.toggle('on',k===si);b.classList.toggle('done',si>k);});
+  if(sec==='tarea')renderChosen();
+  window.scrollTo({top:0,behavior:'smooth'});
+  state.slide=idx;
+  if(!noSave)scheduleSave();
+}
+function goSec(n){for(var k=0;k<slides.length;k++){if(slides[k].dataset.sec===n){go(k);return;}}}
+$('#nextBtn').addEventListener('click',function(){go(idx+1)});
+$('#prevBtn').addEventListener('click',function(){go(idx-1)});
+$$('[data-go]').forEach(function(b){b.addEventListener('click',function(){goSec(b.dataset.go)})});
+document.addEventListener('keydown',function(e){
+  var t=document.activeElement&&document.activeElement.tagName;
+  if(t==='TEXTAREA'||t==='INPUT')return;
+  if(e.key==='ArrowRight')go(idx+1);
+  if(e.key==='ArrowLeft')go(idx-1);
+});
+
+/* ================= Interacciones ================= */
+function showStep(n){
+  $$('.cstep').forEach(function(b,k){b.classList.toggle('on',k===n)});
+  $('#cdetail').innerHTML='<p>'+CYCLE[n][0]+'</p><small>'+CYCLE[n][1]+'</small>';
+}
+$$('.cstep').forEach(function(b){b.addEventListener('click',function(){showStep(+b.dataset.step)})});
+showStep(0);
+
+function countGroup(prefix){var n=0;for(var k in state.toggles){if(k.indexOf(prefix)===0&&state.toggles[k])n++;}return n;}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-toggle]');
+  if(t){
+    var k=t.dataset.toggle,on=!state.toggles[k];
+    if(on&&t.dataset.group==='est'&&countGroup('est_')>=EST_MAX)return;
+    state.toggles[k]=on;paintToggles();renderCauses();renderEst();scheduleSave();return;
+  }
+  var r=e.target.closest('[data-rate]');
+  if(r){state.ratings[r.dataset.rate]=+r.dataset.val;paintRatings();scheduleSave();return;}
+  var q=e.target.closest('.qopt');
+  if(q){state.quiz[q.dataset.q]=+q.dataset.o;renderQuiz();scheduleSave();return;}
+  if(e.target.closest('.qnext')){state.qpos=Math.min(state.qpos+1,QUIZ.length);renderQuiz();scheduleSave();window.scrollTo({top:$('#qdots').offsetTop-90,behavior:'smooth'});return;}
+  if(e.target.closest('.qprev')){state.qpos=Math.max(state.qpos-1,0);renderQuiz();scheduleSave();return;}
+  if(e.target.closest('#qretry')){state.quiz={};state.qpos=0;renderQuiz();scheduleSave();return;}
+});
+function paintToggles(){$$('[data-toggle]').forEach(function(b){b.setAttribute('aria-pressed',state.toggles[b.dataset.toggle]?'true':'false')});}
+function paintRatings(){$$('[data-rate]').forEach(function(b){b.classList.toggle('sel',state.ratings[b.dataset.rate]===+b.dataset.val)});}
+
+function onField(e){
+  var el=e.target,k=el.dataset&&el.dataset.key;if(!k)return;
+  state.fields[k]=el.value;scheduleSave();
+}
+document.addEventListener('input',onField);
+document.addEventListener('change',onField);
+
+function renderCauses(){
+  var n=0,dims=0;
+  CAUSES.forEach(function(d){var c=0;d.items.forEach(function(_,i){if(state.toggles['causa_'+d.id+'_'+i])c++;});n+=c;if(c)dims++;});
+  var msg=n===0?'Marca las causas que podrían explicar la escena.':
+    dims>=3?'Una misma conducta admite explicaciones de naturaleza muy distinta. Por eso conviene comprobar antes de ajustar.':
+    'Revisa otras dimensiones: ¿podría haber causas fuera de tu forma de comunicar?';
+  $('#tally').innerHTML='<span class="big">'+n+'</span><p>causas posibles en <b>'+dims+' de 5</b> dimensiones.</p><p>'+msg+'</p>';
+}
+
+function renderEst(){
+  var n=countGroup('est_');
+  $('#estCount').textContent=n+' de '+EST_MAX+' elegidas'+(n>=EST_MAX?' · para cambiar una, desmárcala primero':'');
+  $$('.strat').forEach(function(a){
+    var on=!!state.toggles['est_'+a.dataset.strat];
+    a.classList.toggle('picked',on);
+    var b=$('.pick',a);b.disabled=n>=EST_MAX&&!on;b.textContent=on?'Elegida para esta semana':'Practicar esta semana';
+  });
+}
+function chosenStrats(){return STRATS.filter(function(s){return state.toggles['est_'+s.id]});}
+function renderChosen(){
+  var ch=chosenStrats();
+  $('#chosen').innerHTML='<h3 style="font-size:18px">Tus estrategias para esta semana</h3>'+
+    (ch.length?'<ul>'+ch.map(function(s){return '<li><b>'+s.t+'</b>: '+s.d+'</li>'}).join('')+'</ul>':'<p class="muted">Todavía no eliges estrategias. Vuelve a la actividad 5.</p>');
+}
+
+function profile(){
+  var c={estructurar:0,dialogar:0,agilizar:0},n=0;
+  QUIZ.forEach(function(q,i){var s=state.quiz[i];if(s===undefined||s===null)return;c[q.opts[s][1]]++;n++;});
+  return {c:c,n:n};
+}
+function renderQuiz(){
+  var pos=state.qpos||0;
+  $$('.qcard').forEach(function(card,i){
+    card.classList.toggle('on',i===pos);
+    var sel=state.quiz[i],has=sel!==undefined&&sel!==null;
+    card.classList.toggle('answered',has);
+    $$('.qopt',card).forEach(function(o,k){o.classList.toggle('sel',has&&sel===k)});
+    $('.qnext',card).disabled=!has;
+  });
+  $$('#qdots i').forEach(function(d,i){
+    d.className='';var s=state.quiz[i];
+    if(s!==undefined&&s!==null)d.classList.add('done');
+    if(i===pos)d.classList.add('cur');
+  });
+  var sum=$('#qsum');
+  if(pos>=QUIZ.length){
+    var p=profile(),top=null,max=-1;
+    Object.keys(p.c).forEach(function(k){if(p.c[k]>max){max=p.c[k];top=k;}});
+    var bars=Object.keys(TEND).map(function(k){
+      var pct=p.n?Math.round(p.c[k]/p.n*100):0;
+      return '<div class="bar"><span><b>'+TEND[k].n+'</b><small>'+TEND[k].d+'</small></span><div class="tr"><div style="width:'+pct+'%;background:'+TEND[k].c+'"></div></div><b>'+p.c[k]+'</b></div>';
+    }).join('');
+    sum.innerHTML='<h3>Tu perfil de decisiones</h3>'+
+      '<p>En '+p.n+' situaciones, tu tendencia más frecuente fue <b>'+TEND[top].n.toLowerCase()+'</b>: '+TEND[top].d+'</p>'+
+      '<div class="bars">'+bars+'</div>'+
+      '<p style="margin-top:16px">Las tres tendencias son válidas. Cada una produce efectos distintos según el curso, el momento y el propósito. Un repertorio amplio permite elegir en lugar de reaccionar siempre de la misma forma.</p>'+
+      '<p style="margin-top:10px"><b style="color:var(--mostaza)">Para conversar:</b> ¿te reconoces en este perfil? ¿En qué niveles o situaciones te gustaría probar otra tendencia?</p>'+
+      '<div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn qprev" style="background:rgba(255,255,255,.12);color:#fff">Volver a la situación 12</button><button class="btn" id="qretry" style="background:var(--mostaza);color:var(--morado-deep)">Responder de nuevo</button></div>';
+    sum.classList.add('on');
+  }else sum.classList.remove('on');
+}
+
+/* ================= Aplicar estado ================= */
+function applyState(){
+  $$('[data-key]').forEach(function(el){el.value=state.fields[el.dataset.key]||'';});
+  paintToggles();paintRatings();renderCauses();renderEst();renderQuiz();renderChosen();
+  go(state.slide||0,true);
+}
+
+/* ================= Ficha ================= */
+function row(label,val){return '<div class="row"><b>'+label+'</b><span>'+(val?esc(val).replace(/\n/g,'<br>'):'<span class="empty">Sin completar</span>')+'</span></div>';}
+function buildFicha(){
+  var F=state.fields,d=new Date(),p=profile();
+  var rub=RUBRIC.map(function(r,i){var v=state.ratings['m_'+i];var l=LEVELS.filter(function(x){return x[0]===v})[0];return row(r[0],l?l[1]:'')}).join('');
+  var dims=DIMS.map(function(x){return row(x[1],state.ratings[x[0]]?state.ratings[x[0]]+' de 4':'')}).join('');
+  var prof=p.n?Object.keys(TEND).map(function(k){return TEND[k].n+': '+p.c[k]}).join(' · '):'';
+  $('#ficha').innerHTML='<h1>Comunicación docente en acción</h1><p>Ficha de mentoría · '+d.toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'})+'</p>'+
+    '<h2>Microexposición de instrucciones</h2>'+row('Palabras clave',F.plan_notas)+row('Lo más claro fue',F.micro_claro)+row('Dudé cuando',F.micro_duda)+
+    '<h2>Retroalimentación del mentor</h2>'+rub+row('Lo que funcionó',F.mentor_bien)+row('Ajuste para practicar',F.mentor_ajuste)+
+    '<h2>Perfil de decisiones</h2>'+row('Elecciones ('+p.n+' de '+QUIZ.length+')',prof)+
+    '<h2>Tarea de la semana</h2>'+row('Estrategias elegidas',chosenStrats().map(function(s){return s.t}).join(' / '))+row('Clase en que se aplica',F.tarea_clase)+
+    '<h2>Registro de la semana</h2>'+row('Observé',F.reg_obs)+row('Interpreté',F.reg_int)+row('Otras hipótesis',F.reg_hip)+row('Cómo lo comprobé',F.reg_comp)+row('Qué ajusté y efecto',F.reg_ajuste)+row('Uso de estrategias',F.reg_estrategias)+dims+row('Para la próxima mentoría',F.reg_conversar);
+}
+window.addEventListener('beforeprint',buildFicha);
+$('#printBtn').addEventListener('click',function(){buildFicha();window.print();});
+$('#resetBtn').addEventListener('click',function(){
+  if(!confirm('Se borrarán todas las respuestas de esta sesión. ¿Continuar?'))return;
+  state=blank();
+  try{localStorage.removeItem(LS_KEY);}catch(e){}
+  if(remoteRef)remoteRef.remove().catch(function(){});
+  applyState();
+});
+
+/* ================= Guardado ================= */
+var remoteRef=null,saveTimer=null;
+function setSync(t){$('#syncStatus').textContent=t;}
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveState,600);}
+function saveState(){
+  state.updatedAt=Date.now();
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!remoteRef){setSync('Guardado en este navegador');return;}
+  setSync('Guardando…');
+  remoteRef.set(JSON.parse(JSON.stringify(state))).then(function(){setSync('Guardado en la nube');}).catch(function(){setSync('Guardado en este navegador');});
+}
+var firebaseConfig={
+  apiKey:"AIzaSyCTMsAAvTOt7IRXvXRlZGgoYk4knccHpa4",
+  authDomain:"trayectoria-2026.firebaseapp.com",
+  databaseURL:"https://trayectoria-2026-default-rtdb.firebaseio.com",
+  projectId:"trayectoria-2026",
+  storageBucket:"trayectoria-2026.firebasestorage.app",
+  messagingSenderId:"963939528799",
+  appId:"1:963939528799:web:dc462d7717bc0e7df5abea"
+};
+applyState();
+try{
+  if(!window.firebase)throw new Error('sin SDK');
+  firebase.initializeApp(firebaseConfig);
+  var auth=firebase.auth(),db=firebase.database();
+
+  // Mantener la misma identidad anónima al cerrar y volver a abrir el navegador.
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(function(){
+      auth.onAuthStateChanged(function(user){
+        if(user){
+          remoteRef=db.ref('users/'+user.uid+'/mentoriaComunicacionDocente/tarea_semanal_v4');
+          setSync('Conectado · recuperando…');
+
+          remoteRef.once('value').then(function(snap){
+            var remote=snap.val();
+
+            // Conserva siempre la versión más reciente entre nube y navegador.
+            if(remote&&(remote.updatedAt||0)>(state.updatedAt||0)){
+              state=normalize(remote);
+              try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+              applyState();
+            }else if(state.updatedAt){
+              // Si el navegador tiene cambios más nuevos, súbelos al reconectar.
+              remoteRef.set(JSON.parse(JSON.stringify(state))).catch(function(){});
+            }
+            setSync('Sincronizado');
+          }).catch(function(){
+            setSync('Guardado en este navegador');
+          });
+        }else{
+          setSync('Creando sesión segura…');
+          auth.signInAnonymously().catch(function(){
+            setSync('Guardado en este navegador');
+          });
+        }
+      });
+    })
+    .catch(function(){
+      setSync('Guardado en este navegador');
+    });
+
+  // Si recupera conexión durante la semana, vuelve a sincronizar lo pendiente.
+  window.addEventListener('online',function(){
+    if(remoteRef){
+      setSync('Sincronizando…');
+      saveState();
+    }
+  });
+
+  window.addEventListener('offline',function(){
+    setSync('Sin conexión · guardado local');
+  });
+
+  // Guarda inmediatamente al cambiar de pestaña o cerrar, además del debounce habitual.
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='hidden'){
+      state.updatedAt=Date.now();
+      try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+      if(remoteRef)remoteRef.set(JSON.parse(JSON.stringify(state))).catch(function(){});
+    }
+  });
+
+}catch(e){
+  setSync('Guardado en este navegador');
+}
+})();
+</script>
+</body>
+</html>
